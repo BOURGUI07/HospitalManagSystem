@@ -50,10 +50,9 @@ public class PatientManag {
     
     public void viewPatients(){
         if(!this.map.isEmpty()){
-            ArrayList col = (ArrayList) this.map.values();
-            for(var p:col){
-                System.out.println(p);
-            }
+            this.map.values().forEach(System.out::println);
+        }else{
+            System.out.println("No Patient is Registrated");
         }
     }
 }

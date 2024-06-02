@@ -73,5 +73,13 @@ public class DoctorManag {
             a.append("[").append(i).append("] ").append(list.get(i).getName()).append("\n");
         }
         System.out.println(a);
-    }   
+    }
+    
+    public void viewDoctors(){
+        if(this.map.isEmpty()){
+            System.out.println("No Doctor is Registrated");
+        }else{
+            this.map.values().forEach(System.out::println);
+        }
+    }
 }

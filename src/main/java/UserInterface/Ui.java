@@ -114,6 +114,12 @@ public class Ui {
         MaritalStatus status = this.maritalPage(s);
         var history = this.medicalHistoryPage();
         this.patmanag.addPatient(name, birth, gender, phone, email, address, ssn, contactName, contact, contactPhone, blood, status, history);
+        if(this.patmanag.getPatientForSSN(ssn)!=null){
+            System.out.println("The Patient: " + name + " with ssn: " + ssn + " is Successfuly Registrated in The System");
+        }else{
+            System.out.println("Couldn't Add The Patient. Try again");
+            this.addPatientPage();
+        }
     }
     
     private BloodType bloodPage(String b){      
@@ -433,6 +439,271 @@ public class Ui {
             m = this.scanner.nextLine().toUpperCase();
         }
         return list;
+    }
+    
+    private void doctorManagPage(){
+        while(true){
+            System.out.println("[A]: Add New Doctor");
+            System.out.println("[S]: search For Doctor");
+            System.out.println("[U]: Update Doctor Schedule");
+            System.out.println("[V]: View Doctors");
+            System.out.println("[X]: Quit");
+            String answer = this.scanner.nextLine().toUpperCase();
+            if(answer.equals("X")){
+                break;
+            }
+            if(answer.equals("A")){
+                this.addDoctorPage();
+            }else if(answer.equals("S")){
+                this.searchDoctorPage();
+            }else if(answer.equals("V")){
+                this.docmanag.viewDoctors();
+            }else{
+                this.updateDocSchedule();
+            }
+        }
+    }
+    
+    private void updateDocSchedule(){
+        System.out.println("Enter The Doctor License Number");
+        Doctor doc = this.docmanag.getDoctorForLicense(this.scanner.nextLine());
+        while(true){
+            System.out.println("[A]: Add Days Off");
+            System.out.println("[R]: Remove Days Off");
+            System.out.println("[X]: Quit");
+            String a = this.scanner.nextLine().toUpperCase();
+            if(a.equals("X")){
+                break;
+            }
+            if(a.equals("A")){
+                System.out.println("Enter The Day");
+                System.out.println("[TU]: Tuesday");
+                System.out.println("[W]: Wednesday");
+                System.out.println("[T]: Thursday");
+                System.out.println("[F]: Friday");
+                System.out.println("[S]: Saturday");
+                System.out.println("[N]: Sunday");
+                String d = this.scanner.nextLine();
+                var day = this.dayMap().get(d);
+                doc.getSchedule().addDayOff(day);
+            }else{
+                System.out.println("Enter The Day");
+                System.out.println("[TU]: Tuesday");
+                System.out.println("[W]: Wednesday");
+                System.out.println("[T]: Thursday");
+                System.out.println("[F]: Friday");
+                System.out.println("[S]: Saturday");
+                System.out.println("[N]: Sunday");
+                String d = this.scanner.nextLine();
+                var day = this.dayMap().get(d);
+                doc.getSchedule().removeDayOff(day);
+            }
+        }
+    }
+    
+    private void addDoctorPage(){
+        System.out.println("Enter the Doctor Name");
+        String name = this.scanner.nextLine();
+        System.out.println("Enter the Doctor Birth Date(dd-mm-yyyy)");
+        String d = this.scanner.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate date = LocalDate.parse(d, formatter);
+        System.out.println("Enter The Doctor License");
+        String license = this.scanner.nextLine();
+        System.out.println("Enter the Doctor Gender (M for Male, F for Female)");
+        String g = this.scanner.nextLine().toUpperCase();
+        Gender gender;
+        switch(g){
+            case "M" -> gender = Gender.MALE;
+            default -> gender = Gender.FEMALE;
+        }
+        System.out.println("Enter the Doctor phone");
+        String phone = this.scanner.nextLine();
+        System.out.println("Enter the Doctor email");
+        String email = this.scanner.nextLine();
+        System.out.println("Enter the Doctor street");
+        String street = this.scanner.nextLine();
+        System.out.println("Enter the Doctor city");
+        String city = this.scanner.nextLine();
+        System.out.println("Enter the Doctor state");
+        String state = this.scanner.nextLine();
+        System.out.println("Enter the Doctor zip code");
+        String zip = this.scanner.nextLine();
+        System.out.println("Enter the Doctor country");
+        String country = this.scanner.nextLine();
+        var address = new Address(street, city, state, zip, country);
+        System.out.println("Enter The Doctor Specialization");
+        System.out.println("[G]: General Medicine");
+        System.out.println("[P]: Pediatrics");
+        System.out.println("[D]: Dermatology");
+        System.out.println("[E]: Emergency Medicine");
+        System.out.println("[U]: Urology");
+        System.out.println("[O]: Ophtalmology");
+        System.out.println("[C]: Cardiology");
+        var specialty = this.specialtyMap().get(this.scanner.nextLine().toUpperCase());
+        var qualif = this.getQualif();
+        System.out.println("Enter The Number of Experience Years");
+        int exp = Integer.parseInt(this.scanner.nextLine());
+        var schedule = this.getSchedule();
+        this.docmanag.addDoctor(name, date, license, gender, phone, email, address, specialty, qualif, exp, schedule);
+        if(this.docmanag.getDoctorForLicense(license)!=null){
+            System.out.println("Doctor Successfully Added");
+        }else{
+            System.out.println("Couldn't Add Doctor. Try Again");
+            this.addDoctorPage();
+        }
+    }
+    
+    private Schedule getSchedule(){
+        return new Schedule(this.getWorkingHours(),this.getOnCallHours(),this.getDaysOff());
+    }
+    
+    private ArrayList<WorkingHours> getWorkingHours(){
+        var list = new ArrayList<WorkingHours>();
+        System.out.println("Enter The Working Day(empty will stop)");
+        System.out.println("[M]: Monday");
+        System.out.println("[TU]: Tuesday");
+        System.out.println("[W]: Wednesday");
+        System.out.println("[T]: Thursday");
+        System.out.println("[F]: Friday");
+        System.out.println("[S]: Saturday");
+        System.out.println("[N]: Sunday");
+        String a = this.scanner.nextLine();
+        while(!a.isEmpty()){
+            var day = this.dayMap().get(a);
+            System.out.println("Enter The Start Time(hh:mm)");
+            String t1 = this.scanner.nextLine();
+            LocalTime startTime = LocalTime.parse(t1, DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println("Enter The End Time(hh:mm)");
+            String t2 = this.scanner.nextLine();
+            LocalTime endTime = LocalTime.parse(t2, DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println("Enter The Start Break Time(hh:mm)");
+            String t3 = this.scanner.nextLine();
+            LocalTime breakStart = LocalTime.parse(t3, DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println("Enter The End Break Time(hh:mm)");
+            String t4 = this.scanner.nextLine();
+            LocalTime breakEnd = LocalTime.parse(t4, DateTimeFormatter.ofPattern("HH:mm"));
+            list.add(new WorkingHours(day,startTime, endTime, breakStart, breakEnd));
+            System.out.println("Enter The Working Day(empty will stop)");
+            System.out.println("[M]: Monday");
+            System.out.println("[TU]: Tuesday");
+            System.out.println("[W]: Wednesday");
+            System.out.println("[T]: Thursday");
+            System.out.println("[F]: Friday");
+            System.out.println("[S]: Saturday");
+            System.out.println("[N]: Sunday");
+            a = this.scanner.nextLine();
+        }
+        return list;
+    }
+    
+    private ArrayList<OnCallHours> getOnCallHours(){
+        var list = new ArrayList<OnCallHours>();
+        System.out.println("Enter The On Call Day(empty will stop)");
+        System.out.println("[M]: Monday");
+        System.out.println("[TU]: Tuesday");
+        System.out.println("[W]: Wednesday");
+        System.out.println("[T]: Thursday");
+        System.out.println("[F]: Friday");
+        System.out.println("[S]: Saturday");
+        System.out.println("[N]: Sunday");
+        String a = this.scanner.nextLine();
+        while(!a.isEmpty()){
+            var day = this.dayMap().get(a);
+            System.out.println("Enter The Start Time(hh:mm)");
+            String t1 = this.scanner.nextLine();
+            LocalTime startTime = LocalTime.parse(t1, DateTimeFormatter.ofPattern("HH:mm"));
+            System.out.println("Enter The End Time(hh:mm)");
+            String t2 = this.scanner.nextLine();
+            LocalTime endTime = LocalTime.parse(t2, DateTimeFormatter.ofPattern("HH:mm"));
+            list.add(new OnCallHours(day,startTime, endTime));
+            System.out.println("Enter The On Call Day(empty will stop)");
+            System.out.println("[M]: Monday");
+            System.out.println("[TU]: Tuesday");
+            System.out.println("[W]: Wednesday");
+            System.out.println("[T]: Thursday");
+            System.out.println("[F]: Friday");
+            System.out.println("[S]: Saturday");
+            System.out.println("[N]: Sunday");
+            a = this.scanner.nextLine();
+        }
+        return list;
+    }
+    
+    private ArrayList<DayOfWeek> getDaysOff(){
+        var list = new ArrayList<DayOfWeek>();
+        System.out.println("Enter The Days Off(empty will stop)");
+        System.out.println("[M]: Monday");
+        System.out.println("[TU]: Tuesday");
+        System.out.println("[W]: Wednesday");
+        System.out.println("[T]: Thursday");
+        System.out.println("[F]: Friday");
+        System.out.println("[S]: Saturday");
+        System.out.println("[N]: Sunday");
+        String a = this.scanner.nextLine();
+        while(!a.isEmpty()){
+            list.add(this.dayMap().get(a));
+            a = this.scanner.nextLine();
+        }
+        return list;
+    }
+    
+    private Map<String, DayOfWeek> dayMap(){
+        return Map.ofEntries(
+                Map.entry("F", DayOfWeek.FRIDAY),
+                Map.entry("M", DayOfWeek.MONDAY),
+                Map.entry("N", DayOfWeek.SUNDAY),
+                Map.entry("T", DayOfWeek.THURSDAY),
+                Map.entry("W", DayOfWeek.WEDNESDAY),
+                Map.entry("TU", DayOfWeek.TUESDAY),
+                Map.entry("S", DayOfWeek.SATURDAY)
+        );
+    }
+    
+    private Map<String, Specialization> specialtyMap(){
+        return Map.ofEntries(
+                
+                Map.entry("E", Specialization.EMERGENCY),
+                Map.entry("C", Specialization.CARDIOLOGY),
+                Map.entry("D", Specialization.DERMATOLOGY),
+                Map.entry("G", Specialization.GENERAL),
+                Map.entry("O", Specialization.OPHTALMOLOGY),
+                Map.entry("P", Specialization.PEDIATRICS),
+                Map.entry("U", Specialization.UROLOGY)
+                );
+    }
+    
+    private Map<String, Qualification> qualifMap(){
+        return Map.ofEntries(
+                Map.entry("O", Qualification.DO),
+                Map.entry("M", Qualification.MBBS),
+                Map.entry("D", Qualification.MD)
+        );
+    }
+    
+    private ArrayList<Qualification> getQualif(){
+        var list = new ArrayList<Qualification>();
+        System.out.println("Enter the Doctor Qualifications(Empty Will Stop)");
+        System.out.println("[O]: DO");
+        System.out.println("[M]: MBBS");
+        System.out.println("[D]: MD");
+        String a = this.scanner.nextLine().toUpperCase();
+        while(!a.isEmpty()){
+            list.add(this.qualifMap().get(a));
+            a = this.scanner.nextLine().toUpperCase();
+        }
+        return list;
+    }
+    
+    private void searchDoctorPage(){
+        System.out.println("Enter the doctor license number");
+        String a = this.scanner.nextLine();
+        Doctor doc = this.docmanag.getDoctorForLicense(a);
+        if(doc != null){
+            System.out.println(doc);
+        }else{
+            System.out.println("No Doctor Was Found for the license number");
+        }
     }
     
     

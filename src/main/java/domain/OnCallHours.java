@@ -13,11 +13,12 @@ import java.time.temporal.ChronoUnit;
  * @author hp
  */
 public class OnCallHours extends VarHours {
+    public OnCallHours(DayOfWeek day, LocalTime start, LocalTime end){
+        super(day, start,end);
+    }
+    
     @Override
     public int getTotalAvailableDuration(){
         return (int) super.getStart().until(super.getEnd(), ChronoUnit.HOURS);
-    }
-    public OnCallHours(DayOfWeek day, LocalTime start, LocalTime end){
-        super(day, start,end);
     }
 }

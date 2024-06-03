@@ -74,11 +74,10 @@ This project is a console-based application developed in Core Java, designed to 
          Manage Appointments
    ====================================
    1. Schedule New Appointment
-   2. Update Appointment
-   3. Cancel Appointment
-   4. View Doctor’s Schedule
-   5. View Patient’s Appointments
-   6. Back to Main Menu
+   2. Cancel Appointment
+   3. View Doctor’s Schedule
+   4. View Patient’s Appointments
+   5. Back to Main Menu
    ====================================
    Enter your choice: _
    ```

@@ -30,11 +30,10 @@ This project is a console-based application developed in Core Java, designed to 
    1. Manage Patients
    2. Manage Doctors
    3. Manage Appointments
-   4. Manage Inventory
-   5. Manage Billing
-   6. View Reports
-   7. View Audit Logs
-   8. Logout
+   4. Manage Billing
+   5. View Reports
+   6. View Audit Logs
+   7. Logout
    ====================================
    Enter your choice: _
    ```
@@ -80,20 +79,6 @@ This project is a console-based application developed in Core Java, designed to 
    4. View Doctor’s Schedule
    5. View Patient’s Appointments
    6. Back to Main Menu
-   ====================================
-   Enter your choice: _
-   ```
-
-   **Inventory Management Menu**
-   ```
-   ====================================
-          Manage Inventory
-   ====================================
-   1. Add New Inventory Item
-   2. Update Inventory Item
-   3. Delete Inventory Item
-   4. View Inventory Levels
-   5. Back to Main Menu
    ====================================
    Enter your choice: _
    ```

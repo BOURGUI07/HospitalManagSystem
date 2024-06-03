@@ -33,7 +33,7 @@ public class AppointmentManagTest {
     public AppointmentManagTest() {
         this.docmanag = this.doctest.getDocman();
         this.patmanag = this.pattest.getPatman();
-        this.appmanag = new AppointmentManag(this.docmanag);
+        this.appmanag = new AppointmentManag(this.docmanag,this.patmanag);
         this.doc = this.doctest.getDoc();
         this.pat = this.pattest.getPat();
         this.app= appmanag.makeAppointment(pat, Specialization.GENERAL, doc, LocalDate.of(2024, Month.MAY, 29), LocalTime.of(9, 30), VisitPurpose.ROUTINE, 30);
@@ -63,7 +63,8 @@ public class AppointmentManagTest {
     
     @Test
     void test1(){
-        this.appmanag.cancelAppointment(this.app);
+        var id = this.app.getId().toString();
+        this.appmanag.cancelAppointment(id);
         assertFalse(this.doc.getAppointments().isEmpty());
         assertFalse(this.pat.getAppointments().isEmpty());
     }

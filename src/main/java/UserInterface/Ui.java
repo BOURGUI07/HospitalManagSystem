@@ -24,7 +24,7 @@ public class Ui {
         this.scanner=scanner;
         this.docmanag=new DoctorManag();
         this.patmanag=new PatientManag();
-        this.appmanag= new AppointmentManag(this.docmanag);        
+        this.appmanag= new AppointmentManag(this.docmanag, this.patmanag);        
     }
     
     private void adminPage(){
@@ -69,7 +69,45 @@ public class Ui {
     }
     
     private void manageAppointmentsPage(){
+        while(true){
+            System.out.println("[A]: Schedule New Appointment");
+            System.out.println("[C]: Cancel Appointment");
+            System.out.println("[D]: View Doctor Schedule");
+            System.out.println("[P]: View Patient's Appointments");
+            System.out.println("[X]: Quit");
+            String a = this.scanner.nextLine().toUpperCase();
+            if(a.equals("X")){
+                break;
+            }
+            switch(a){
+                case "A" -> this.makeNewAppointmentPage();
+                case "C" -> this.cancelAppointmentPage();
+                case "D" -> this.viewDocSchedule();
+                default -> this.viewPatientAppointments();
+            }
+        }
+    }
+    
+    private void makeNewAppointmentPage(){
         
+    }
+    
+    private void cancelAppointmentPage(){
+        System.out.println("Enter The Appointment id");
+        String id = this.scanner.nextLine();
+        this.appmanag.cancelAppointment(id);
+    }
+    
+    private void viewDocSchedule(){
+        System.out.println("Enter The Doctor License Number");
+        String license = this.scanner.nextLine();
+        this.appmanag.viewDoctorSchedule(license);
+    }
+    
+    private void viewPatientAppointments(){
+        System.out.println("Enter the patient ssn");
+        String ssn = this.scanner.nextLine();
+        this.appmanag.viewPatientAppointments(ssn);
     }
     
     private void patientManagPag(){

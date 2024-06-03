@@ -55,4 +55,13 @@ public class PatientManag {
             System.out.println("No Patient is Registrated");
         }
     }
+    
+    public void deletePatient(String ssn){
+        var p =this.getPatientForSSN(ssn);
+        if(p!=null){
+            this.getMap().remove(ssn);
+        }else{
+            throw new IllegalArgumentException("No Patient For SSN");
+        }
+    }
 }

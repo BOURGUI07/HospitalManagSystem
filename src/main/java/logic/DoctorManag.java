@@ -40,6 +40,15 @@ public class DoctorManag {
         }
     }
     
+    public void deleteDoctor(String license){
+        var d = this.getDoctorForLicense(license);
+        if(d!=null){
+            this.map.remove(license);
+        }else{
+            throw new IllegalArgumentException("No Doctor For License");
+        }
+    }
+    
     public ArrayList<Doctor> getDoctorsBasedOnSpecialtyDate(Specialization x, LocalDate date, LocalTime time){
         DayOfWeek day = DayOfWeek.from(date);
         ArrayList<Doctor> list = new ArrayList<>();

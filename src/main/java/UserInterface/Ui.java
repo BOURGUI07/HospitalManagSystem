@@ -27,9 +27,55 @@ public class Ui {
         this.appmanag= new AppointmentManag(this.docmanag);        
     }
     
+    private void adminPage(){
+        while(true){
+            System.out.println("[P]: Manage Patients");
+            System.out.println("[D]: Manage Doctors");
+            System.out.println("[A]: Manage Appointments");
+            System.out.println("[B]: Manage Billing");
+            System.out.println("[R]: View Reports");
+            System.out.println("[L]: View Audit Logs");
+            System.out.println("[X]: Logout");
+            String answer = this.scanner.nextLine().toUpperCase();
+            if(answer.equals("X")){
+                break;
+            }
+            if(answer.equals("P")){
+                this.patientManagPag();
+            }else if(answer.equals("D")){
+                this.doctorManagPage();
+            }else if(answer.equals("A")){
+                this.manageAppointmentsPage();
+            }else if(answer.equals("B")){
+                this.manageBillingPage();
+            }else if(answer.equals("R")){
+                this.viewReportsPage();
+            }else{
+                this.viewAuditLogs();
+            }
+        }
+    }
+    
+    private void manageBillingPage(){
+        
+    }
+    
+    private void viewReportsPage(){
+        
+    }
+    
+    private void viewAuditLogs(){
+        
+    }
+    
+    private void manageAppointmentsPage(){
+        
+    }
+    
     private void patientManagPag(){
         while(true){
             System.out.println("[A]: Add Patient");
+            System.out.println("[D]: Delete Patient");
             System.out.println("[H]: View Patient Medical History");
             System.out.println("[V]: View Patients Records");
             System.out.println("[X]: Quit");
@@ -40,9 +86,16 @@ public class Ui {
             switch (answer) {
                 case "A" -> this.addPatientPage();
                 case "H" -> this.viewPatientHistoryPage();
+                case "D" -> this.deletePatientPage();
                 default -> this.viewPatientsRecords();
             }
         }
+    }
+    
+    private void deletePatientPage(){
+        System.out.println("Enter the Patient SSN");
+        String ssn = this.scanner.nextLine();
+        this.patmanag.deletePatient(ssn);
     }
     
     private void viewPatientHistoryPage(){
@@ -444,6 +497,7 @@ public class Ui {
     private void doctorManagPage(){
         while(true){
             System.out.println("[A]: Add New Doctor");
+            System.out.println("[D]: Delete Doctor");
             System.out.println("[S]: search For Doctor");
             System.out.println("[U]: Update Doctor Schedule");
             System.out.println("[V]: View Doctors");
@@ -458,10 +512,18 @@ public class Ui {
                 this.searchDoctorPage();
             }else if(answer.equals("V")){
                 this.docmanag.viewDoctors();
-            }else{
+            }else if(answer.equals("U")){
                 this.updateDocSchedule();
+            }else{
+                this.deleteDocPage();
             }
         }
+    }
+    
+    private void deleteDocPage(){
+        System.out.println("Enter The Doctor License Number");
+        String license = this.scanner.nextLine();
+        this.docmanag.deleteDoctor(license);
     }
     
     private void updateDocSchedule(){

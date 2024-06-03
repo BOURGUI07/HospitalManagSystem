@@ -89,9 +89,8 @@ This project is a console-based application developed in Core Java, designed to 
            Manage Billing
    ====================================
    1. Generate Bill
-   2. Process Payment
-   3. View Outstanding Payments
-   4. Back to Main Menu
+   2. View Outstanding Payments
+   3. Back to Main Menu
    ====================================
    Enter your choice: _
    ```

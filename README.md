@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a console-based application developed in Core Java, designed to manage hospital operations. It serves as a management system where administrators, doctors, nurses, receptionists, and patients can perform various tasks related to hospital management, including managing patients, doctors, appointments, inventory, billing, and more. The application is built to demonstrate object-oriented programming principles, console I/O operations, and unit testing with JUnit in Java, tailored specifically for hospital management.
+This project is a console-based application developed in Core Java, designed to manage hospital operations. It serves as a management system where administrators can perform various tasks related to hospital management, including managing patients, doctors, appointments, inventory, billing, and more. The application is built to demonstrate object-oriented programming principles, console I/O operations, and unit testing with JUnit in Java, tailored specifically for hospital management.
 
 ## Features
 

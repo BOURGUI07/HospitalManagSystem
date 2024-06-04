@@ -57,7 +57,62 @@ public class Ui {
     }
     
     private void manageBillingPage(){
-        
+        while(true){
+            System.out.println("[G]: Generate Bill");
+            System.out.println("[P]: Process Bill");
+            System.out.println("[A]: Authorize Bill");
+            System.out.println("[Y]: Pay Bill");
+            System.out.println("[V]: View Outstanding Bill");
+            System.out.println("[X]: Quit");
+            String ans = this.scanner.nextLine().toUpperCase();
+            if(ans.equals("X")){
+                break;
+            }
+            if(ans.equals("G")){
+                this.generateBillPage();
+            }else if(ans.equals("P")){
+                this.getTheBill().processBill();
+            }else if(ans.equals("A")){
+                this.getTheBill().authorizeBill();
+            }else if(ans.equals("Y")){
+                this.getTheBill().payBill();
+            }else{
+                this.appmanag.viewOutStandingBills();
+            }
+        }
+    }
+    
+    private Bill getTheBill(){
+        System.out.println("Enter The Bill ID");
+        return this.appmanag.getBill(this.scanner.nextLine());
+    }
+    
+    private void generateBillPage(){
+        System.out.println("Enter The Appointment ID");
+        var app = this.appmanag.getAppoint(this.scanner.nextLine());
+        System.out.println("Choose The Payment Method");
+        System.out.println("[C]: Cash");
+        System.out.println("[B]: Bank");
+        System.out.println("[D]: Card");
+        System.out.println("[W]: Digital Wallet");
+        var pay = this.payMap().get(this.scanner.nextLine().toUpperCase());
+        var bill = this.appmanag.billPatient(app, pay);
+        if(bill!=null){
+            System.out.println("Bill Successfully Registrated");
+            System.out.println("Bill ID: " + bill.getId().toString());
+        }else{
+            System.out.println("Failed To Generate the Bill. Try Again");
+            this.generateBillPage();
+        }
+    }
+    
+    private Map<String, Payment> payMap(){
+        return Map.ofEntries(
+                Map.entry("C", Payment.CASH),
+                Map.entry("B", Payment.BANK),
+                Map.entry("D", Payment.CARD),
+                Map.entry("W", Payment.DIGITALWALLET)
+        );
     }
     
     private void viewReportsPage(){

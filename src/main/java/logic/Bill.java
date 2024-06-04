@@ -15,11 +15,33 @@ public class Bill {
     private Appointment app;
     private Payment method;
     private UUID id;
+    private BillStatus status;
     
     public Bill(Appointment app, Payment method){
         this.app=app;
         this.method = method;
         this.id=UUID.randomUUID();
+        this.status = null;
+    }
+    
+    public BillStatus getStatus(){
+        return this.status;
+    }
+    
+    public void processBill(){
+        this.status = BillStatus.PENDING;
+    }
+    
+    public void authorizeBill(){
+        this.status = BillStatus.AUTHORIZED;
+    }
+    
+    public void payBill(){
+        this.status=BillStatus.PAID;
+    }
+    
+    public boolean isBillUnpaid(){
+        return this.status!=BillStatus.PAID;
     }
     
     public UUID getId(){

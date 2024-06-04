@@ -19,6 +19,8 @@ public class AppointmentManag {
     private Map<Patient, ArrayList<Appointment>> patMap;
     private Map<Doctor, ArrayList<Appointment>> docMap;
     private Map<UUID, Appointment> appMap;
+    private Map<UUID, Bill> billMap;
+    private Map<Appointment, Bill> billAppMap;
     private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
     private static final Pattern UUID_PATTERN = Pattern.compile(UUID_REGEX);
     
@@ -28,6 +30,8 @@ public class AppointmentManag {
         this.patMap=new HashMap<>();
         this.docMap=new HashMap<>();
         this.appMap=new HashMap<>();
+        this.billMap=new HashMap<>();
+        this.billAppMap = new HashMap<>();
     }    
     
     public Map<Patient, ArrayList<Appointment>> getPatMap() {
@@ -81,6 +85,7 @@ public class AppointmentManag {
     
     public void cancelAppointment(String id){
         var app = this.getAppoint(id);
+        var bill = this.billAppMap.get(app);
         if(app!=null){
             Doctor d = app.getDoctor();
             Patient p = app.getPatient();
@@ -89,6 +94,9 @@ public class AppointmentManag {
                 p.getAppointments().remove(app);
                 this.docMap.get(d).remove(app);
                 this.patMap.get(p).remove(app);
+                this.billMap.remove(bill.getId());
+                p.getBills().remove(bill);
+                this.billAppMap.remove(app);
             }
         }else{
             throw new IllegalArgumentException("No id For Appointment");
@@ -98,7 +106,27 @@ public class AppointmentManag {
     public Bill billPatient(Appointment app, Payment pay){
         var bill = new Bill(app,pay);
         app.getPatient().getBills().add(bill);
+        this.billMap.put(bill.getId(), bill);
+        this.billAppMap.put(app, bill);
         return bill;
+    }
+    
+    public Bill getBill(String id){
+        if(this.isValidUUID(id)){
+            var idd = UUID.fromString(id);
+            if(this.billMap.containsKey(idd)){
+                return this.billMap.get(idd);
+            }     
+        }
+        return null;
+    }
+    
+    public Bill getBillForAppoint(Appointment app){
+        if(this.billAppMap.containsKey(app)){
+            return billAppMap.get(app);
+        }else{
+            return null;
+        }
     }
     
     public void viewDoctorSchedule(String License){
@@ -144,5 +172,9 @@ public class AppointmentManag {
             return false;
         }
         return UUID_PATTERN.matcher(uuidString).matches();
+    }
+    
+    public void viewOutStandingBills(){
+        this.billMap.values().stream().filter(b -> b.isBillUnpaid()).forEach(System.out::println);
     }
 }

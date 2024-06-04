@@ -89,7 +89,54 @@ public class Ui {
     }
     
     private void makeNewAppointmentPage(){
-        
+        System.out.println("Enter The Patient SSN");
+        var p = this.patmanag.getPatientForSSN(this.scanner.nextLine());
+        System.out.println("Enter The Specialization");
+        System.out.println("Enter The Doctor Specialization");
+        System.out.println("[G]: General Medicine");
+        System.out.println("[P]: Pediatrics");
+        System.out.println("[D]: Dermatology");
+        System.out.println("[E]: Emergency Medicine");
+        System.out.println("[U]: Urology");
+        System.out.println("[O]: Ophtalmology");
+        System.out.println("[C]: Cardiology");
+        var specialty = this.specialtyMap().get(this.scanner.nextLine().toUpperCase());
+        var date = this.getTheDate();
+        var time = this.getTheTime();
+        System.out.println("Here Are The Doctor Names With Specialization: " + specialty + " Available On: " + date + " At: " + time);
+        this.docmanag.getDoctorsBasedOnSpecialtyDate(specialty, date, time).forEach(d -> System.out.println(d.getName()));
+        System.out.println("Enter The Doctor Name You Would Like To Make Appointment With");
+        var doctor = this.docmanag.getDoctorForName(specialty, date, time, this.scanner.nextLine());
+        System.out.println("Enter the Medical Purpose");
+        System.out.println("[MJ]: Major Surgery");
+        System.out.println("[MN]: Minor Surgery");
+        System.out.println("[D]: Diagnostic Testing");
+        System.out.println("[S]: Specialist Consultation");
+        System.out.println("[R]: Routine Check-up");
+        System.out.println("[F]: Follow-up Visit");
+        System.out.println("[T]: Consultation For Symptoms");
+        var purpose = this.purposeMap().get(this.scanner.nextLine().toUpperCase());
+        System.out.println("Enter The Duration The Duration in Minutes");
+        var dur = Integer.parseInt(this.scanner.nextLine());
+        var app = this.appmanag.makeAppointment(p, specialty, doctor, date, time, purpose, dur);
+        if(app!=null){
+            System.out.println("Appointment Successfully Registrated");
+            System.out.println("Appointmenet ID: " + app.getId());
+        }else{
+            System.out.println("Failed To Register Appointment. Try again");
+            this.makeNewAppointmentPage();
+        }
+    }
+    
+    private LocalDate getTheDate(){
+        System.out.println("Enter The Date (dd-mm-yy)");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return  LocalDate.parse(this.scanner.nextLine(), formatter);
+    }
+    
+    private LocalTime getTheTime(){
+        System.out.println("Enter the Time: (HH:MM)");
+        return LocalTime.parse(this.scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
     }
     
     private void cancelAppointmentPage(){
